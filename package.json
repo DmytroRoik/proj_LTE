@@ -1,0 +1,37 @@
+{
+  "name": "proj_lte",
+  "version": "1.0.0",
+  "description": "cursach about LTE unlicensed",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmytroRoik/proj_LTE.git"
+  },
+  "keywords": [
+    "LTE",
+    "kursach"
+  ],
+  "author": "Roik Dmytro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DmytroRoik/proj_LTE/issues"
+  },
+  "homepage": "https://github.com/DmytroRoik/proj_LTE#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-imagemin": "^4.0.0",
+    "gulp-less": "^3.3.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglifyjs": "^0.6.2",
+    "imagemin-pngquant": "^5.0.1"
+  }
+}
