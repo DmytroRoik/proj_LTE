@@ -21,7 +21,7 @@
       var textArea=document.getElementById("entered_code");
       enteredCode=try_validateCode(textArea.value);
 
-      if(enteredCode=="")return false;
+      if(enteredCode==""){textArea.value=""; return false;}
       return true;                     
     }
 
@@ -52,22 +52,23 @@
       var data = new google.visualization.DataTable();
       data.addColumn('number', 'I');
       data.addColumn('number', 'Q');
+      data.addColumn({type: 'string', role: 'tooltip'});
       if(type_PSK==PSK.PSK_4)
       {
         for(var i=0;i<code.length/2;i++){
           var temp_code=code[i*2]+code[i*2+1];
 
           if(temp_code=='11'){
-            data.addRows([[1,1]]);
+            data.addRows([[1,1,temp_code]]);
           }
           else if(temp_code=='01'){
-            data.addRows([[-1,1]]);
+            data.addRows([[-1,1,temp_code]]);
           }
           else if(temp_code=='00'){
-            data.addRows([[-1,-1]]);
+            data.addRows([[-1,-1,temp_code]]);
           }
           else if(temp_code=='10'){
-            data.addRows([[1,-1]]);
+            data.addRows([[1,-1,temp_code]]);
           }
         }
       }
@@ -77,52 +78,52 @@
 
           var temp_code=code[i*4]+code[i*4+1]+code[i*4+2]+code[i*4+3];
           if(temp_code=='0000'){
-            data.addRows([[0.33,0.33]]);
+            data.addRows([[0.33,0.33,temp_code]]);
           }
           else if(temp_code=='0001'){
-            data.addRows([[0.33,-1]]);
+            data.addRows([[0.33,-1,temp_code]]);
           }
           else if(temp_code=='0010'){
-            data.addRows([[-1,0.33]]);
+            data.addRows([[-1,0.33,temp_code]]);
           }
           else if(temp_code=='0011'){
-            data.addRows([[-1,-1]]);
+            data.addRows([[-1,-1,temp_code]]);
           }
           else if(temp_code=='0100'){
-            data.addRows([[0.33,0.33]]);
+            data.addRows([[0.33,0.33,temp_code]]);
           }
           else if(temp_code=='0101'){
-            data.addRows([[-0.33,1]]);
+            data.addRows([[-0.33,1,temp_code]]);
           }
           else if(temp_code=='0110'){
-            data.addRows([[-1,-0.33]]);
+            data.addRows([[-1,-0.33,temp_code]]);
           }
           else if(temp_code=='0111'){
-            data.addRows([[-1,1]]);
+            data.addRows([[-1,1,temp_code]]);
           }
           else if(temp_code=='1000'){
-            data.addRows([[0.33,-0.33]]);
+            data.addRows([[0.33,-0.33,temp_code]]);
           }
           else if(temp_code=='1001'){
-            data.addRows([[0.33,-1]]);
+            data.addRows([[0.33,-1,temp_code]]);
           }
           else if(temp_code=='1010'){
-            data.addRows([[1,-0.33]]);
+            data.addRows([[1,-0.33,temp_code]]);
           }
           else if(temp_code=='1011'){
-            data.addRows([[1,-1]]);
+            data.addRows([[1,-1,temp_code]]);
           }
           else if(temp_code=='1100'){
-            data.addRows([[0.33,0.33]]);
+            data.addRows([[0.33,0.33,temp_code]]);
           }
           else if(temp_code=='1101'){
-            data.addRows([[0.33,1]]);
+            data.addRows([[0.33,1,temp_code]]);
           }
           else if(temp_code=='1110'){
-            data.addRows([[1,0.33]]);
+            data.addRows([[1,0.33,temp_code]]);
           }
           else if(temp_code=='1111'){
-            data.addRows([[1,1]]);
+            data.addRows([[1,1,temp_code]]);
           }
         }
       }
