@@ -7,26 +7,32 @@
 	
 </head>
 <body>
-	<div>
-		<label for="entered_code" >Enter your code</label><br>
-		<input type="text" id="entered_code" placeholder="1010101010">
-		<form action="">
-			<label>Тип модуляції:</label><br>
-			<input type="radio" name="modulation" value="4" onchange="setModulation()"  checked="checked"> QPSK<br>
-			<input type="radio" name="modulation" value="16" onchange="setModulation()" > 16-QAM<br>
-		</form>
-		<input type="button" value="Send" onclick="Update()">
+	<div id="map">
+		
 	</div>
-	<header></header>
-	<div id="chart_div" style="width: 900px; height: 500px;"></div>
+	<details open="open">
+		<summary>Copyright 1999-2014.</summary>
+		<div>
+			<label for="entered_code" >Enter your code</label><br>
+			<input type="text" id="entered_code" placeholder="1010101010">
+			<form action="">
+				<label>Тип модуляції:</label><br>
+				<input type="radio" name="modulation" value="4" onchange="setModulation()"  checked="checked"> QPSK<br>
+				<input type="radio" name="modulation" value="16" onchange="setModulation()" > 16-QAM<br>
+			</form>
+			<input type="button" value="Send" onclick="Update()">
+		</div>
+		<header></header>
+		<div id="chart_div" style="width: 900px; height: 500px;"></div>
 
-	<div>
-		<label for="distance_range">Відстань:</label><br>
-		<input type="range" name="" id="distance_range" >
+		<div>
+			<label for="distance_range">Відстань:</label><br>
+			<input type="range" name="" id="distance_range" >
 
-	</div>
-	<button value="Send data" onclick="setCode()"></button>
-	<div id="chart_div_second" style="width: 900px; height: 500px;"></div>
+		</div>
+		<button value="Send data" onclick="setCode()"></button>
+		<div id="chart_div_second" style="width: 900px; height: 500px;"></div>
+	</details>
 	<script src="js/chart.js" defer></script>
 
 </body>
