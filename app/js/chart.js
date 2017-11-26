@@ -1,135 +1,173 @@
       google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+     // google.charts.setOnLoadCallback(drawChart);
 
 
-      var  PSK = {
-        PSK_4: 1,
-        PSK_16: 2
-      };  
-      
-      function createArray(type_PSK,code)
+     var  PSK = {
+      PSK_4: 4,
+      PSK_16: 16
+    };  
+    var modulation=PSK.PSK_4;
+    var enteredCode="";
+
+    function setModulation()
+    {
+      var radioBut=document.getElementsByName("modulation");
+      if(radioBut[0].checked)
+        modulation=PSK.PSK_4;
+      else if(radioBut[1].checked)
+        modulation=PSK.PSK_16;
+    }
+    function setCode(){
+      var textArea=document.getElementById("entered_code");
+      enteredCode=try_validateCode(textArea.value);
+
+      if(enteredCode=="")return false;
+      return true;                     
+    }
+
+    function try_validateCode (code) {
+      var temp_code="";
+      for(var i=0;i<code.length;i++)
       {
-        var data;
-        
-        if(type_PSK==PSK.PSK_4)
+        if(code[i]==' ')continue;
+        else if(code[i]!='1'&&code[i]!='0'){return "";}
+        else temp_code+=code[i];
+      }
+      if(modulation==PSK.PSK_4&&temp_code.length%2!=0){
+        temp_code+='0';
+      }
+      else if(modulation==PSK.PSK_16&&temp_code.length%4!=0)
+      {
+        for(var i=0;i<temp_code.length%4;i++)
         {
-          data = google.visualization.arrayToDataTable([
-           ['I', 'Q'],
-           [0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]
-           ]);
+          temp_code+='0';
+        }
+      }
+      alert(temp_code);
+      return temp_code;
+    }
 
-          for(var i=0;i<code.length/2;i++){
-            var temp_code=code[i*2]+code[i*2+1];
-            if(temp_code=='11'){
-              data.og[i].c[0].v=1;
-              data.og[i].c[1].v=1;
-            }
-            else if(temp_code=='01'){
-              data.og[i].c[0].v=-1;
-              data.og[i].c[1].v=1;
-            }
-            else if(temp_code=='00'){
-              data.og[i].c[0].v=-1;
-              data.og[i].c[1].v=-1;
-            }
-            else if(temp_code=='10'){
-              data.og[i].c[0].v=1;
-              data.og[i].c[1].v=-1;
-            }
+    function createArray(type_PSK,code)
+    {
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'I');
+      data.addColumn('number', 'Q');
+      if(type_PSK==PSK.PSK_4)
+      {
+        for(var i=0;i<code.length/2;i++){
+          var temp_code=code[i*2]+code[i*2+1];
+
+          if(temp_code=='11'){
+            data.addRows([[1,1]]);
+          }
+          else if(temp_code=='01'){
+            data.addRows([[-1,1]]);
+          }
+          else if(temp_code=='00'){
+            data.addRows([[-1,-1]]);
+          }
+          else if(temp_code=='10'){
+            data.addRows([[1,-1]]);
           }
         }
-        else if(type_PSK==PSK.PSK_16)
-        {
-          data = google.visualization.arrayToDataTable([
-           ['I', 'Q'], 
-           [0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]
-           ]);
-          for(var i=0;i<code.length/4;i++){
-            var temp_code=code[i*4]+code[i*4+1]+code[i*4+2]+code[i*4+3];
-            if(temp_code=='0000'){
-              data.og[i].c[0].v=0.33;
-              data.og[i].c[1].v=0.33;
-            }
-            else if(temp_code=='0001'){
-              data.og[i].c[0].v=-0.33;
-              data.og[i].c[1].v=-1;
-            }
-            else if(temp_code=='0010'){
-              data.og[i].c[0].v=-1;
-              data.og[i].c[1].v=-0.33;
-            }
-            else if(temp_code=='0011'){
-              data.og[i].c[0].v=-1;
-              data.og[i].c[1].v=-1;
-            }
-            else if(temp_code=='0100'){
-              data.og[i].c[0].v=0.33;
-              data.og[i].c[1].v=0.33;
-            }
-            else if(temp_code=='0101'){
-              data.og[i].c[0].v=-0.33;
-              data.og[i].c[1].v=1;
-            }
-            else if(temp_code=='0110'){
-              data.og[i].c[0].v=-1;
-              data.og[i].c[1].v=-0.33;
-            }
-            else if(temp_code=='0111'){
-              data.og[i].c[0].v=-1;
-              data.og[i].c[1].v=1;
-            }
-            else if(temp_code=='1000'){
-              data.og[i].c[0].v=0.33;
-              data.og[i].c[1].v=-0.33;
-            }
-            else if(temp_code=='1001'){
-              data.og[i].c[0].v=0.33;
-              data.og[i].c[1].v=-1;
-            }
-            else if(temp_code=='1010'){
-              data.og[i].c[0].v=1;
-              data.og[i].c[1].v=-0.33;
-            }
-            else if(temp_code=='1011'){
-              data.og[i].c[0].v= 1;
-              data.og[i].c[1].v=-1;
-            }
-            else if(temp_code=='1100'){
-              data.og[i].c[0].v=0.33;
-              data.og[i].c[1].v=0.33;
-            }
-            else if(temp_code=='1101'){
-              data.og[i].c[0].v=0.33;
-              data.og[i].c[1].v=1;
-            }
-            else if(temp_code=='1110'){
-              data.og[i].c[0].v=1;
-              data.og[i].c[1].v=0.33;
-            }
-            else if(temp_code=='1111'){
-              data.og[i].c[0].v=1;
-              data.og[i].c[1].v=1;
-            }
+      }
+      else if(type_PSK==PSK.PSK_16)
+      {
+        for(var i=0;i<code.length/4;i++){
 
+          var temp_code=code[i*4]+code[i*4+1]+code[i*4+2]+code[i*4+3];
+          if(temp_code=='0000'){
+            data.addRows([[0.33,0.33]]);
+          }
+          else if(temp_code=='0001'){
+            data.addRows([[0.33,-1]]);
+          }
+          else if(temp_code=='0010'){
+            data.addRows([[-1,0.33]]);
+          }
+          else if(temp_code=='0011'){
+            data.addRows([[-1,-1]]);
+          }
+          else if(temp_code=='0100'){
+            data.addRows([[0.33,0.33]]);
+          }
+          else if(temp_code=='0101'){
+            data.addRows([[-0.33,1]]);
+          }
+          else if(temp_code=='0110'){
+            data.addRows([[-1,-0.33]]);
+          }
+          else if(temp_code=='0111'){
+            data.addRows([[-1,1]]);
+          }
+          else if(temp_code=='1000'){
+            data.addRows([[0.33,-0.33]]);
+          }
+          else if(temp_code=='1001'){
+            data.addRows([[0.33,-1]]);
+          }
+          else if(temp_code=='1010'){
+            data.addRows([[1,-0.33]]);
+          }
+          else if(temp_code=='1011'){
+            data.addRows([[1,-1]]);
+          }
+          else if(temp_code=='1100'){
+            data.addRows([[0.33,0.33]]);
+          }
+          else if(temp_code=='1101'){
+            data.addRows([[0.33,1]]);
+          }
+          else if(temp_code=='1110'){
+            data.addRows([[1,0.33]]);
+          }
+          else if(temp_code=='1111'){
+            data.addRows([[1,1]]);
           }
         }
+      }
+      return data;
+    }
 
-            console.log(data.og);
-            return data;
-          }
+    function Array_with_error (miss) {
 
-          function drawChart() {
+    }
 
-            var data = createArray(PSK.PSK_16,"101110011010");
+    function drawChart() {
 
-            var options = {
-              title: '',
-              hAxis: {title: 'I', minValue: -2, maxValue: 2},
-              vAxis: {title: 'Q', minValue: -2, maxValue: 2},
-              legend: 'none'
-            };
+      var data = createArray(modulation,enteredCode);
 
-            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+      var options = {
+        title: '',
+        hAxis: {title: 'I', minValue: -2, maxValue: 2},
+        vAxis: {title: 'Q', minValue: -2, maxValue: 2},
+        legend: 'none'
+      };
 
-            chart.draw(data, options);
-          }
+      var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+
+    function draw_chart2()
+    {
+      var data = createArray(modulation,enteredCode);
+
+      var options = {
+        title: '',
+        hAxis: {title: 'I', minValue: -2, maxValue: 2},
+        vAxis: {title: 'Q', minValue: -2, maxValue: 2},
+        legend: 'none'
+      };
+
+      var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_second'));
+
+      chart.draw(data, options);
+    }
+
+    function Update () {
+      if(!setCode()){alert("Введено неправильні дані!\n Спробуйте ще раз!");return;}
+      setModulation();
+      drawChart();
+      draw_chart2();
+    }

@@ -3,16 +3,31 @@
 <head>
 	<meta charset="UTF-8">
 	<title>LTE_Project</title>
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" defer></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	
 </head>
 <body>
-	hello
+	<div>
+		<label for="entered_code" >Enter your code</label><br>
+		<input type="text" id="entered_code" placeholder="1010101010">
+		<form action="">
+			<label>Тип модуляції:</label><br>
+			<input type="radio" name="modulation" value="4" onchange="setModulation()"  checked="checked"> QPSK<br>
+			<input type="radio" name="modulation" value="16" onchange="setModulation()" > 16-QAM<br>
+		</form>
+		<input type="button" value="Send" onclick="Update()">
+	</div>
 	<header></header>
-	 <div id="chart_div" style="width: 900px; height: 500px;">
-	 	
-	 </div>
-<script src="js/chart.js" defer></script>
+	<div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+	<div>
+		<label for="distance_range">Відстань:</label><br>
+		<input type="range" name="" id="distance_range" >
+
+	</div>
+	<button value="Send data" onclick="setCode()"></button>
+	<div id="chart_div_second" style="width: 900px; height: 500px;"></div>
+	<script src="js/chart.js" defer></script>
 
 </body>
 </html>
