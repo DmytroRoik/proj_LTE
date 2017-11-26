@@ -7,7 +7,7 @@
       PSK_16: 16
     };  
     var modulation=PSK.PSK_4;
-    var enteredCode="";
+    var Code="";
 
     function setModulation()
     {
@@ -136,7 +136,7 @@
 
     function drawChart() {
 
-      var data = createArray(modulation,enteredCode);
+      var data = createArray(modulation,Code);
 
       var options = {
         title: '',
