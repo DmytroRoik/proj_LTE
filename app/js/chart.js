@@ -136,8 +136,8 @@
 
     function drawChart() {
 
-      var data = createArray(modulation,Code);
-
+      var data = createArray(modulation,enteredCode);
+console.log(data);
       var options = {
         title: '',
         hAxis: {title: 'I', minValue: -2, maxValue: 2},
