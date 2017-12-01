@@ -1,10 +1,11 @@
 var can_place_station=false;
 var can_place_MSstation=false;
+var can_delete_station=false;
 
 var map;
 var markers=[];
 var areas=[];
-
+var Station_id=0;
 function initMap() 
       {//create a map
        map = new google.maps.Map(document.getElementById('map'), {
@@ -31,6 +32,11 @@ function initMap()
        AddBaseLTE_Btn.index = 1;
        map.controls[google.maps.ControlPosition.LEFT_TOP].push(ClearMap_Btn);
 
+       var DeleteBS_Btn = document.createElement('div');
+       var deleteBS_Control = new DeleteBS_Control(DeleteBS_Btn);
+       AddBaseLTE_Btn.index = 1;
+       map.controls[google.maps.ControlPosition.LEFT_TOP].push(DeleteBS_Btn);
+
        google.maps.event.addListener(map,'click',function(e)
        {
         place_station(e.latLng.lat(),e.latLng.lng());
@@ -53,10 +59,15 @@ function place_station(lat,lng,gmap)
                position: new google.maps.LatLng(lat,lng),
                map: map,
                icon:icon,
-               title: 'Click to zoom'
+               title: Station_id.toString()
              });
+              Station_id+=1;
+              marker.addListener('click', function() {
+                deleteStation(this);
+              });
               place_station_cover(lat,lng,[2,4,6]);//((((((((((((((((((((((((((((((((()))))))))))))))))))))))))))))))))
               markers.push(marker);
+          
              // can_place_station=false;
            }
            else if (can_place_station==false&&can_place_MSstation) {
@@ -107,10 +118,29 @@ function place_station(lat,lng,gmap)
     }
 
     
+function deleteStation (station) {
+if(!can_delete_station)return;
+  for(var i=areas.length-1;i>=0;i--){
+    if(areas[i].center.lat()==station.position.lat()&&areas[i].center.lng()==station.position.lng()){
+      areas[i].setMap(null);
+      areas.splice(i,1);
+      console.log(areas.length)
 
+    }
+  }
+  for(var i=markers.length-1;i>=0;i--){
+    if(markers[i]==station){
+      markers[i].setMap(null);
+      markers.splice(i,1);
+      Station_id--;
+      return;
+    }
+  }
+}
 function clear_map() {//delete all obj from map
   setMapOnAll(areas,null);
   setMapOnAll(markers,null);
+  Station_id=0;
 }
 function setMapOnAll(mark,map1) {
   for (var i = 0; i < mark.length; i++) {
@@ -189,6 +219,39 @@ function Add_MS_Control(controlDiv) {
     else this.style.backgroundColor='white';
   });
 }
+function DeleteBS_Control(controlDiv) {
+  // Set CSS for the control border.
+  var controlUI = document.createElement('button');
+  controlUI.id="DeleteBS_Btn";
+  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.border = '2px solid #fff';
+  controlUI.style.borderRadius = '5px';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.marginBottom = '22px';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Delete Base stations';
+  controlDiv.appendChild(controlUI);
+
+  // Set CSS for the control interior.
+  var controlText = document.createElement('div');
+  controlText.style.color = 'rgb(25,25,25)';
+  controlText.style.fontFamily = 'Arial,sans-serif';
+  controlText.style.fontSize = '16px';
+  controlText.style.paddingLeft = '5px';
+  controlText.style.paddingRight = '5px';
+  controlText.innerHTML = 'Delete Base Station';
+  controlUI.appendChild(controlText);
+
+  // Setup the click event listeners to button
+  controlUI.addEventListener('click', function() {
+    can_delete_station=!can_delete_station;
+    if(can_delete_station==true){
+      this.style.backgroundColor='green';
+    }
+     else this.style.backgroundColor='white';
+  });
+}
+
 
 function ClearMap_Control(controlDiv) {
   // Set CSS for the control border.
