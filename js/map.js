@@ -49,7 +49,7 @@ function initMap()
       if(can_place_station&&can_place_MSstation==false)
       {
         var icon = {
-                url: "../img/BaseStation_icon.png", // url
+                url: "img/BaseStation_icon.png", // url
                 scaledSize: new google.maps.Size(30, 30), // scaled size
                 origin: new google.maps.Point(0,0), // origin
                 anchor: new google.maps.Point(15, 30) // anchor
@@ -74,7 +74,7 @@ function initMap()
            }
            else if (can_place_station==false&&can_place_MSstation) {
              var icon = {
-                url: "../img/mobile_station.png", // url
+                url: "img/mobile_station.png", // url
                 scaledSize: new google.maps.Size(30, 30), // scaled size
                 origin: new google.maps.Point(0,0), // origin
                 anchor: new google.maps.Point(15, 30) // anchor
@@ -186,10 +186,10 @@ function ActiveMapButton (button) {
       mapButtons[i].style.backgroundColor='white';
     }
     button.style.backgroundColor='green';
-
   }
 
-  switch (button.id) {
+  switch (button.id)
+  {
     case 'Clear_Btn':
     clear_map();
     Station_id=0;
