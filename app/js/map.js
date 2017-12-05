@@ -43,12 +43,12 @@ function initMap()
       });
      }
 
-function place_station(lat,lng,gmap)
-{
-  var marker;
-  if(can_place_station&&can_place_MSstation==false)
-  {
-    var icon = {
+     function place_station(lat,lng,gmap)
+     {
+      var marker;
+      if(can_place_station&&can_place_MSstation==false)
+      {
+        var icon = {
                 url: "../img/BaseStation_icon.png", // url
                 scaledSize: new google.maps.Size(30, 30), // scaled size
                 origin: new google.maps.Point(0,0), // origin
@@ -59,15 +59,17 @@ function place_station(lat,lng,gmap)
                position: new google.maps.LatLng(lat,lng),
                map: map,
                icon:icon,
-               title: Station_id.toString()
+               typeStation: 'BS',
+               title: '123',
+               id: Station_id.toString()
              });
               Station_id+=1;
               marker.addListener('click', function() {
                 deleteStation(this);
-              });
+              }); 
               place_station_cover(lat,lng,[2,4,6]);//((((((((((((((((((((((((((((((((()))))))))))))))))))))))))))))))))
               markers.push(marker);
-          
+
              // can_place_station=false;
            }
            else if (can_place_station==false&&can_place_MSstation) {
@@ -81,66 +83,81 @@ function place_station(lat,lng,gmap)
               marker = new google.maps.Marker({
                position: new google.maps.LatLng(lat,lng),
                map: map,
+               typeStation: 'MS',
                icon:icon,
                title: 'Click to zoom'
              });
+              marker.addListener('click', function() {
+                deleteStation(this);
+              }); 
               markers.push(marker);
+            }
 
-             // can_place_MSstation=false;
-           } 
-         }
+          }
 
-         function place_station_agreement(sender)
-    {//can you place station?
-      if(sender.id=='Add_MS_Btn'){can_place_MSstation=!can_place_MSstation; can_place_station=false;}
-      else if(sender.id=='Add_BS_Btn'){can_place_station=!can_place_station; can_place_MSstation=false;}
-    }
+          function place_station_cover(lat,lng,radius)
+          {
+            for(var i=0;i<radius.length;i++)
+            {
+              var circle = new google.maps.Circle({
+                strokeColor: '#FF'+i.toString()+i.toString()+'00',
+                strokeOpacity: 0.2*i,
+                strokeWeight: 1*i,
+                fillColor: '#FF'+i.toString()+i.toString()+'00',
+                fillOpacity: 0.35,
+                map: map,
+                center: new google.maps.LatLng(lat,lng),
+                radius:radius[i]*1000
+              },);
+              areas.push(circle);
+              google.maps.event.addListener(circle,'click',function(e){
+                place_station(e.latLng.lat(),e.latLng.lng());
+              });
+            }
+          }
 
-    function place_station_cover(lat,lng,radius)
-    {
-      for(var i=0;i<radius.length;i++)
-      {
-        var circle = new google.maps.Circle({
-          strokeColor: '#FF'+i.toString()+i.toString()+'00',
-          strokeOpacity: 0.2*i,
-          strokeWeight: 1*i,
-          fillColor: '#FF'+i.toString()+i.toString()+'00',
-          fillOpacity: 0.35,
-          map: map,
-          center: new google.maps.LatLng(lat,lng),
-          radius:radius[i]*1000
-        },);
-        areas.push(circle);
-        google.maps.event.addListener(circle,'click',function(e){
-          place_station(e.latLng.lat(),e.latLng.lng());
-        });
-      }
-    }
 
-    
-function deleteStation (station) {
-if(!can_delete_station)return;
-  for(var i=areas.length-1;i>=0;i--){
-    if(areas[i].center.lat()==station.position.lat()&&areas[i].center.lng()==station.position.lng()){
-      areas[i].setMap(null);
-      areas.splice(i,1);
-      console.log(areas.length)
+          function deleteStation (station) 
+          {
+            if(!can_delete_station)return;
 
-    }
-  }
-  for(var i=markers.length-1;i>=0;i--){
-    if(markers[i]==station){
-      markers[i].setMap(null);
-      markers.splice(i,1);
-      Station_id--;
-      return;
-    }
-  }
-}
+            if(station.typeStation=='BS')
+            {
+              for(var i=areas.length-1;i>=0;i--)
+              {
+                if(areas[i].center.lat()==station.position.lat()&&areas[i].center.lng()==station.position.lng()){
+                  areas[i].setMap(null);
+                  areas.splice(i,1);
+                  console.log(areas.length)
+                }
+              }
+              for(var i=markers.length-1;i>=0;i--)
+              {
+                if(markers[i]==station){
+                  markers[i].setMap(null);
+                  markers.splice(i,1);
+                  Station_id--;
+                  return;
+                }
+              }
+            }
+            else if(station.typeStation=='MS')
+            {
+              for(var i=markers.length-1;i>=0;i--)
+              {
+                if(markers[i]==station)
+                {
+                  markers[i].setMap(null);
+                  markers.splice(i,1);
+                  return;
+                }
+              }
+            }
+          }
 function clear_map() {//delete all obj from map
   setMapOnAll(areas,null);
   setMapOnAll(markers,null);
-  Station_id=0;
+  
 }
 function setMapOnAll(mark,map1) {
   for (var i = 0; i < mark.length; i++) {
@@ -153,6 +170,43 @@ function setMapOnAll(mark,map1) {
 ////////////////////
 //Custom Buttons
 //////////////////
+function ActiveMapButton (button) {
+  var clearMap=document.getElementById('Clear_Btn'),
+  addMS=document.getElementById('Add_MS_Btn'),
+  addBS=document.getElementById('Add_BS_Btn'),
+  deleteBS=document.getElementById('DeleteBS_Btn');
+  
+  var mapButtons=[clearMap,addMS,addBS,deleteBS];
+  if(button.style.backgroundColor=='green'){
+    button.style.backgroundColor='white';
+  }
+  else{
+    can_place_station = can_place_MSstation = can_delete_station=false;
+    for(let i=0;i<mapButtons.length;i++){
+      mapButtons[i].style.backgroundColor='white';
+    }
+    button.style.backgroundColor='green';
+
+  }
+
+  switch (button.id) {
+    case 'Clear_Btn':
+    clear_map();
+    Station_id=0;
+    button.style.backgroundColor = 'white';
+    break;
+    case 'Add_MS_Btn':
+    can_place_MSstation=!can_place_MSstation;
+    break;
+    case 'Add_BS_Btn':
+    can_place_station=!can_place_station;
+    break;
+    case 'DeleteBS_Btn':
+    can_delete_station=!can_delete_station;
+    break;
+  }
+}
+
 function Add_BS_LTE_Control(controlDiv) {
   // Set CSS for the control border.
   var controlUI = document.createElement('button');
@@ -179,11 +233,7 @@ function Add_BS_LTE_Control(controlDiv) {
 
   // Setup the click event listeners to button
   controlUI.addEventListener('click', function() {
-    place_station_agreement(this);
-    var anotherBtn= document.getElementById('Add_MS_Btn');
-    anotherBtn.style.backgroundColor = 'white';
-    if(can_place_station&&!can_place_MSstation)this.style.backgroundColor='green';
-    else this.style.backgroundColor='white';
+    ActiveMapButton(this);
   });
 }
 
@@ -212,11 +262,7 @@ function Add_MS_Control(controlDiv) {
 
   // Setup the click event listeners to button
   controlUI.addEventListener('click', function() {
-    place_station_agreement(this);
-    var anotherBtn= document.getElementById('Add_BS_Btn');
-    anotherBtn.style.backgroundColor = 'white';
-    if(can_place_MSstation)this.style.backgroundColor='green';
-    else this.style.backgroundColor='white';
+    ActiveMapButton(this);
   });
 }
 function DeleteBS_Control(controlDiv) {
@@ -239,19 +285,14 @@ function DeleteBS_Control(controlDiv) {
   controlText.style.fontSize = '16px';
   controlText.style.paddingLeft = '5px';
   controlText.style.paddingRight = '5px';
-  controlText.innerHTML = 'Delete Base Station';
+  controlText.innerHTML = 'Delete Station';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners to button
   controlUI.addEventListener('click', function() {
-    can_delete_station=!can_delete_station;
-    if(can_delete_station==true){
-      this.style.backgroundColor='green';
-    }
-     else this.style.backgroundColor='white';
+    ActiveMapButton(this);
   });
 }
-
 
 function ClearMap_Control(controlDiv) {
   // Set CSS for the control border.
@@ -278,7 +319,6 @@ function ClearMap_Control(controlDiv) {
 
   // Setup the click event listeners to button
   controlUI.addEventListener('click', function() {
-    clear_map();
+    ActiveMapButton(this);
   });
 }
-   
