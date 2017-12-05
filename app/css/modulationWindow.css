@@ -1,0 +1,70 @@
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
+
+details {
+  background-color: #EFEEF1;
+  margin: 10px 0;
+  -webkit-border-radius: 15px 15px 0 0;
+          border-radius: 15px 15px 0 0; }
+  details summary {
+    background-color: rgba(209, 95, 0, 0.5);
+    -webkit-border-radius: inherit;
+            border-radius: inherit;
+    font-size: 25px;
+    padding: 15px;
+    font-weight: bold;
+    margin-bottom: 15px; }
+  details label {
+    margin: 30px;
+    font-size: 24px;
+    text-align: center;
+    margin: 15px; }
+  details input {
+    margin: 10px;
+    padding: 10px;
+    -webkit-border-radius: 10px;
+            border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    -webkit-box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5); }
+    details input + label {
+      display: inline-block; }
+  details #entered_code {
+    width: 250px; }
+
+#mForm {
+  margin: 100 0;
+  text-align: center;
+  margin: 10px 0 40px 0; }
+  #mForm input:last-child {
+    width: 200px;
+    -webkit-border-radius: 20px;
+            border-radius: 20px;
+    -webkit-box-shadow: 3 22 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 3 22 12px rgba(0, 0, 0, 0.5);
+    background-color: darkblue;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    -webkit-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s; }
+    #mForm input:last-child:hover {
+      background-color: #B81034;
+      -webkit-transform: scale(1.1);
+          -ms-transform: scale(1.1);
+              transform: scale(1.1);
+      color: white;
+      border: 2px solid yellow; }
+
+.radio:checked + label {
+  color: red;
+  font-size: 25px; }
+
+.charts {
+  width: 45%;
+  display: inline-block;
+  margin: 0 2.5%; }

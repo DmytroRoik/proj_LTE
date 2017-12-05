@@ -3,6 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>LTE_Project</title>
+	
+	<link rel="stylesheet" href="css/modulationWindow.css">
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTPpQ08GB1OGiE1iMkY_e7wqBAHeVEock&libraries=visualization&callback=initMap" async></script>
 	
@@ -13,22 +15,24 @@
 		
 	</div>
 	<details open="open">
-		<summary>Copyright 1999-2014.</summary>
-		<div>
+		<summary>Modulation Process.</summary>
+		<div id="mForm">
 			<label for="entered_code" >Enter your code</label><br>
-			<input type="text" id="entered_code" placeholder="1010101010">
+			<input type="number" id="entered_code" placeholder="1010101010">
 			<form action="">
 				<label>Тип модуляції:</label><br>
-				<input type="radio" name="modulation" value="4" onchange="setModulation()"  checked="checked"> QPSK<br>
-				<input type="radio" name="modulation" value="16" onchange="setModulation()" > 16-QAM<br>
+				<input type="radio" name="modulation" value="4" class="radio" id="radio1" onchange="setModulation()"  checked="checked">
+				<label for="radio1">QPSK</label> <br>
+				<input type="radio" name="modulation" value="16" onchange="setModulation()" id="radio2" class="radio"> 
+				<label for="radio2">16-QAM</label>
 			</form>
 			<input type="button" value="Send" onclick="Update()">
 		</div>
 		<header></header>
-		<div id="chart_div" style="width: 900px; height: 500px;"></div>
+		<div id="chart_div" class="charts" style="width: 900px; height: 500px;"></div>
 
 		
-		<div id="chart_div_second" style="width: 900px; height: 500px;"></div>
+		<div id="chart_div_second" class="charts" style="width: 900px; height: 500px;"></div>
 	</details>
 	<script src="js/chart.js" defer></script>
   <script src="js/map.js" defer></script>
