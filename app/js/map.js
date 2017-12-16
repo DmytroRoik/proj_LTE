@@ -3,11 +3,166 @@ var can_place_MSstation=false;
 var can_delete_station=false;
 
 var map;
-var markers=[];
-var areas=[];
+
+var MStation_id=0;
 var Station_id=0;
+
+var bsStations=[],
+msStation=[];
+
+function BaseStation(id,position,radius,title){
+  this.position=position;
+  this.id=id;
+  this.power=100;
+  this.mobileStations_id=[];
+  this.typeStation = 'BS';
+  this.area = new google.maps.Circle({
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.2,
+    strokeWeight: 1,
+    fillColor: '#FF8700',
+    fillOpacity: 0.35,
+    map: map,
+    center: new google.maps.LatLng(position.lat,position.lng),
+    radius: radius
+  });
+  
+  this.icon= {
+       url: "../img/BaseStation_icon.png", // url
+       scaledSize: new google.maps.Size(30, 30), // scaled size
+       origin: new google.maps.Point(0,0), // origin
+       anchor: new google.maps.Point(15, 30) // anchor
+     };
+
+     this.marker = new google.maps.Marker({
+       position: new google.maps.LatLng(position.lat,position.lng),
+       map: map,
+       icon: this.icon,
+       title: title
+     });
+     var temp_self= this;
+     this.marker.addListener('click', function () {
+      deleteStation(temp_self);
+    }); 
+
+     google.maps.event.addListener(this.area,'click',function(e){
+      place_station(e.latLng.lat(),e.latLng.lng());
+    });
+   }
+
+   function MobileStation (id,position,BS_id,title) {
+    this.position=position;
+    this.id=id;
+    this.BS_id=BS_id;
+    this.typeStation = 'MS';
+
+    this.icon= {
+       url: "../img/mobile_station.png", // url
+       scaledSize: new google.maps.Size(30, 30), // scaled size
+       origin: new google.maps.Point(0,0), // origin
+       anchor: new google.maps.Point(15, 30) // anchor
+     };
+
+     this.marker = new google.maps.Marker({
+       position: new google.maps.LatLng(position.lat,position.lng),
+       map: map,
+       icon: this.icon,
+       title: BS_id==-1?"Не під'єднано до станції" : title
+     });
+     var temp_self=this;
+     this.marker.addListener('click', function() {
+      deleteStation(temp_self);
+    }); 
+   }
+
+   function place_station(lat,lng,gmap)
+   {
+    if(can_place_station&&can_place_MSstation==false)
+    {
+      var bs=new BaseStation(Station_id,{'lat': lat,'lng': lng },100,'testBS');
+      bsStations.push(bs);
+      Station_id+=1;
+    }
+    else if (can_place_station==false&&can_place_MSstation) {
+
+      var min_dist=10000,BS_id=-1,index=-1;
+      
+      for(var i=0;i<bsStations.length;i++)
+      {
+        var distance=calcDistance(lat,lng,bsStations[i].position.lat,bsStations[i].position.lng);
+        if(distance>=min_dist)continue;
+        else {
+          min_dist=distance;
+          if(distance<=bsStations[i].area.radius){
+            BS_id=bsStations[i].id;
+            index=i;
+          }
+        }
+      }
+      var ms=new MobileStation(MStation_id,{'lat': lat,'lng': lng },BS_id,'MS '+ MStation_id);
+      if(index!=-1&&BS_id!=-1){
+        bsStations[index].mobileStations_id.push(ms.id);
+      }
+      msStation.push(ms);
+      MStation_id+=1;
+    }
+  }
+  
+function calcDistance (fromLat, fromLng, toLat, toLng) {
+    return google.maps.geometry.spherical.computeDistanceBetween(
+      new google.maps.LatLng(fromLat, fromLng), new google.maps.LatLng(toLat, toLng));
+  }
+function clear_map() {//delete all obj from map
+  can_delete_station=true;
+  for(var i=bsStations.length-1;i>=0;i--){
+    deleteStation(bsStations[i]);
+  }
+  Station_id=0;
+
+  for (var i = msStation.length - 1; i >= 0; i--) {
+   deleteStation(msStation[i]);
+ }
+ MStation_id=0;
+ can_delete_station=false;
+}
+
+function deleteStation (station) 
+{
+  if(!can_delete_station)return;
+
+  if(station.typeStation=='BS')
+  {
+    station.area.setMap(null);
+    station.area=null;
+    station.marker.setMap(null);
+    station.marker=null;      
+
+    for(var i=0;i<bsStations.length;i++){
+     if(bsStations[i].id==station.id){
+       bsStations.splice(i,1);
+       return;
+     }
+   }
+ }
+ else if(station.typeStation=='MS')
+ {
+  for(var i=0;i<bsStations.length;i++){
+    if(bsStations[i].id==station.BS_id){
+      if(bsStations[i].mobileStations_id.includes(station.id))
+       bsStations[i].mobileStations_id.splice(bsStations[i].mobileStations_id.indexOf(station.id), 1);        
+     break;
+   }
+ }
+ station.marker.setMap(null);
+ station.marker=null;
+ msStation.splice(msStation.indexOf(station),1);
+}
+}
+
+
 function initMap() 
       {//create a map
+
        map = new google.maps.Map(document.getElementById('map'), {
         zoom: 10,
         center: {lat: 49, lng: 24},
@@ -43,130 +198,6 @@ function initMap()
       });
      }
 
-     function place_station(lat,lng,gmap)
-     {
-      var marker;
-      if(can_place_station&&can_place_MSstation==false)
-      {
-        var icon = {
-                url: "../img/BaseStation_icon.png", // url
-                scaledSize: new google.maps.Size(30, 30), // scaled size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(15, 30) // anchor
-              };
-
-              marker = new google.maps.Marker({
-               position: new google.maps.LatLng(lat,lng),
-               map: map,
-               icon:icon,
-               typeStation: 'BS',
-               title: '123',
-               id: Station_id.toString()
-             });
-              Station_id+=1;
-              marker.addListener('click', function() {
-                deleteStation(this);
-              }); 
-              place_station_cover(lat,lng,[2,4,6]);//((((((((((((((((((((((((((((((((()))))))))))))))))))))))))))))))))
-              markers.push(marker);
-
-             // can_place_station=false;
-           }
-           else if (can_place_station==false&&can_place_MSstation) {
-             var icon = {
-                url: "../img/mobile_station.png", // url
-                scaledSize: new google.maps.Size(30, 30), // scaled size
-                origin: new google.maps.Point(0,0), // origin
-                anchor: new google.maps.Point(15, 30) // anchor
-              };
-
-              marker = new google.maps.Marker({
-               position: new google.maps.LatLng(lat,lng),
-               map: map,
-               typeStation: 'MS',
-               icon:icon,
-               title: 'Click to zoom'
-             });
-              marker.addListener('click', function() {
-                deleteStation(this);
-              }); 
-              markers.push(marker);
-            }
-
-          }
-
-          function place_station_cover(lat,lng,radius)
-          {
-            for(var i=0;i<radius.length;i++)
-            {
-              var circle = new google.maps.Circle({
-                strokeColor: '#FF'+i.toString()+i.toString()+'00',
-                strokeOpacity: 0.2*i,
-                strokeWeight: 1*i,
-                fillColor: '#FF'+i.toString()+i.toString()+'00',
-                fillOpacity: 0.35,
-                map: map,
-                center: new google.maps.LatLng(lat,lng),
-                radius:radius[i]*1000
-              },);
-              areas.push(circle);
-              google.maps.event.addListener(circle,'click',function(e){
-                place_station(e.latLng.lat(),e.latLng.lng());
-              });
-            }
-          }
-
-
-          function deleteStation (station) 
-          {
-            if(!can_delete_station)return;
-
-            if(station.typeStation=='BS')
-            {
-              for(var i=areas.length-1;i>=0;i--)
-              {
-                if(areas[i].center.lat()==station.position.lat()&&areas[i].center.lng()==station.position.lng()){
-                  areas[i].setMap(null);
-                  areas.splice(i,1);
-                  console.log(areas.length)
-                }
-              }
-              for(var i=markers.length-1;i>=0;i--)
-              {
-                if(markers[i]==station){
-                  markers[i].setMap(null);
-                  markers.splice(i,1);
-                  Station_id--;
-                  return;
-                }
-              }
-            }
-            else if(station.typeStation=='MS')
-            {
-              for(var i=markers.length-1;i>=0;i--)
-              {
-                if(markers[i]==station)
-                {
-                  markers[i].setMap(null);
-                  markers.splice(i,1);
-                  return;
-                }
-              }
-            }
-          }
-function clear_map() {//delete all obj from map
-  setMapOnAll(areas,null);
-  setMapOnAll(markers,null);
-  
-}
-function setMapOnAll(mark,map1) {
-  for (var i = 0; i < mark.length; i++) {
-    mark[i].setMap(map1);
-    mark[i]=null;
-  }
-  if(map1==null)mark.length=0;
-}
-
 ////////////////////
 //Custom Buttons
 //////////////////
@@ -188,7 +219,6 @@ function ActiveMapButton (button) {
     button.style.backgroundColor='green';
 
   }
-
   switch (button.id) {
     case 'Clear_Btn':
     clear_map();

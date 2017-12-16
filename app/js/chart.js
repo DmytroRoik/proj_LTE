@@ -6,7 +6,6 @@
        return module;
      })();
      MODULATION.init();
-    
 
      var  PSK = {
       PSK_4: 4,
@@ -14,6 +13,7 @@
     };  
     var modulation=PSK.PSK_4;
     var Code="";
+    var SNR_value=1;
 
     function setModulation()
     {
@@ -51,6 +51,13 @@
       }
       alert(temp_code);
       return temp_code;
+    }
+    function SNRChange (e) {
+      SNR_value=e.value;
+      document.getElementById('SNR_Span').innerText=SNR_value+'dB';
+   
+ //     this.previousSibling.innerText=SNR_value;
+      //#TODO: 
     }
 
     function createArray(type_PSK,code)
@@ -134,14 +141,19 @@
         }
       }
       return data;
-
     }
 
     function Array_with_error (type_PSK,code,SNR) {
-        var data = createArray(type_PSK,code);
+      var data = createArray(type_PSK,code);
+      if(SNR>=30)return data;
+
+      var data1= new google.visualization.DataTable();
+      data.addColumn('number', 'I');
+      data.addColumn('number', 'Q');
+      data.addColumn({type: 'string', role: 'tooltip'});
         //data.og -- points
         console.log(data.og);
-        if(SNR>=30)return data;
+        
         if(type_PSK==PSK.PSK_4){
           if(SNR>=16)return data;
           else{
@@ -154,43 +166,43 @@
 
           }
         }
-    }
+      }
 
-    function drawChart() {
+      function drawChart() {
 
-      var data = createArray(modulation,enteredCode);
-      console.log(data);
-      var options = {
-        title: '',
-        hAxis: {title: 'I', minValue: -2, maxValue: 2},
-        vAxis: {title: 'Q', minValue: -2, maxValue: 2},
-        legend: 'none'
-      };
+        var data = createArray(modulation,enteredCode);
+        console.log(data);
+        var options = {
+          title: '',
+          hAxis: {title: 'I', minValue: -2, maxValue: 2},
+          vAxis: {title: 'Q', minValue: -2, maxValue: 2},
+          legend: 'none'
+        };
 
-      var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
 
-      chart.draw(data, options);
-    }
+        chart.draw(data, options);
+      }
 
-    function draw_chart2()
-    {
-      var data = Array_with_error(modulation,enteredCode);
+      function draw_chart2()
+      {
+        var data = Array_with_error(modulation,enteredCode);
 
-      var options = {
-        title: '',
-        hAxis: {title: 'I', minValue: -2, maxValue: 2},
-        vAxis: {title: 'Q', minValue: -2, maxValue: 2},
-        legend: 'none'
-      };
+        var options = {
+          title: '',
+          hAxis: {title: 'I', minValue: -2, maxValue: 2},
+          vAxis: {title: 'Q', minValue: -2, maxValue: 2},
+          legend: 'none'
+        };
 
-      var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_second'));
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_second'));
 
-      chart.draw(data, options);
-    }
+        chart.draw(data, options);
+      }
 
-    function Update () {
-      if(!setCode()){alert("Введено неправильні дані!\n Спробуйте ще раз!");return;}
-      setModulation();
-      drawChart();
-      draw_chart2();
-    }
+      function Update () {
+        if(!setCode()){alert("Введено неправильні дані!\n Спробуйте ще раз!");return;}
+        setModulation();
+        drawChart();
+        draw_chart2();
+      }
