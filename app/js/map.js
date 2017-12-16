@@ -10,12 +10,19 @@ var Station_id=0;
 var bsStations=[],
 msStation=[];
 
+
 function BaseStation(id,position,radius,title){
   this.position=position;
   this.id=id;
-  this.power=100;
   this.mobileStations_id=[];
   this.typeStation = 'BS';
+  this.power=20;
+  this.h=30;//м над землею
+  this.deltaF=10;//MHz
+  this.speed={
+    uplink:1,
+    downlink:1
+  }
   this.area = new google.maps.Circle({
     strokeColor: '#FF0000',
     strokeOpacity: 0.2,
@@ -40,9 +47,30 @@ function BaseStation(id,position,radius,title){
        icon: this.icon,
        title: title
      });
+     
      var temp_self= this;
+     
      this.marker.addListener('click', function () {
-      deleteStation(temp_self);
+      if(!can_delete_station){
+        var contentString = '<div id="content">'+
+        '<div id="siteNotice">'+
+        '</div>'+
+        '<h1 id="firstHeading" class="firstHeading"> BS № '+temp_self.id+'</h1>'+
+        '<div id="bodyContent">'+
+        '<span>Radius of coverage: '+temp_self.area.radius +' m</span><br>'+
+        '<span>Power: '+temp_self.power +' dBm</span><br>'+
+        '<span>Mobile station numbers: '+temp_self.mobileStations_id.join(' , ') +';</span><br>'+
+        '<span>Speed:</span><br>'+
+        '<span> Uplink: '+temp_self.speed.uplink.toFixed(2) +'Mbit/s</span><br>'+
+        '<span> Downlink: '+temp_self.speed.downlink.toFixed(2) +'Mbit/s</span><br>'+
+        '</div>'+
+        '</div>';
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+        infowindow.open(map,this);
+      }
+      else deleteStation(temp_self);
     }); 
 
      google.maps.event.addListener(this.area,'click',function(e){
@@ -55,7 +83,12 @@ function BaseStation(id,position,radius,title){
     this.id=id;
     this.BS_id=BS_id;
     this.typeStation = 'MS';
-
+    this.distanceToBS=undefined;
+    this.sensetive=undefined;//dB
+    // this.speed={
+    //   uplink: 
+    //   downlink: 4/7*2.38=
+    // }
     this.icon= {
        url: "../img/mobile_station.png", // url
        scaledSize: new google.maps.Size(30, 30), // scaled size
@@ -71,7 +104,32 @@ function BaseStation(id,position,radius,title){
      });
      var temp_self=this;
      this.marker.addListener('click', function() {
-      deleteStation(temp_self);
+      if(!can_delete_station){
+        var temp_string=[temp_self.BS_id==-1?"No connection! ":temp_self.BS_id,
+                         temp_self.sensetive==undefined?"No signal": -temp_self.sensetive.toFixed(2)+' dBm',
+                         temp_self.distanceToBS==undefined?"infinity": temp_self.distanceToBS.toFixed(2)+' m'
+        ];
+           
+        var contentString = '<div id="content">'+
+        '<div id="siteNotice">'+
+        '</div>'+
+        '<h1 id="firstHeading" class="firstHeading"> MS № '+temp_self.id+'</h1>'+
+        '<div id="bodyContent">'+
+        '<span>Connected to BS: '+ temp_string[0]+'</span><br>'+
+        '<span>Signal level: '+ temp_string[1] +'</span><br>'+
+        '<span>Distance to BS: '+ temp_string[2] +'</span><br>'+
+        '<span>Speed:</span><br>'+
+       // '<span> Uplink: '+temp_self.speed.uplink.toFixed(2) +'Mbit/s</span><br>'+
+        //'<span> Downlink: '+temp_self.speed.downlink.toFixed(2) +'Mbit/s</span><br>'+
+        '</div>'+
+        '</div>';
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+        infowindow.open(map,this);
+      }
+      else deleteStation(temp_self);
+
     }); 
    }
 
@@ -79,7 +137,7 @@ function BaseStation(id,position,radius,title){
    {
     if(can_place_station&&can_place_MSstation==false)
     {
-      var bs=new BaseStation(Station_id,{'lat': lat,'lng': lng },100,'testBS');
+      var bs=new BaseStation(Station_id,{'lat': lat,'lng': lng },120,'testBS\nqweqwesasaf\nasdqawr;');
       bsStations.push(bs);
       Station_id+=1;
     }
@@ -99,16 +157,22 @@ function BaseStation(id,position,radius,title){
           }
         }
       }
-      var ms=new MobileStation(MStation_id,{'lat': lat,'lng': lng },BS_id,'MS '+ MStation_id);
+      var ms=new MobileStation(MStation_id,{'lat': lat,'lng': lng },BS_id,'<h1>123</h1>');
+      MStation_id+=1;
       if(index!=-1&&BS_id!=-1){
         bsStations[index].mobileStations_id.push(ms.id);
+        ms.distanceToBS=min_dist;
+        ms.sensetive=(69.55-13.82*1.47+26.16*3.7-3.2*(1.6))+(44.9-6.55*1.47)*(Math.log(min_dist/1000))+20;
       }
+      
       msStation.push(ms);
-      MStation_id+=1;
-    }
+    };
+    
+    
   }
   
-function calcDistance (fromLat, fromLng, toLat, toLng) {
+  
+  function calcDistance (fromLat, fromLng, toLat, toLng) {
     return google.maps.geometry.spherical.computeDistanceBetween(
       new google.maps.LatLng(fromLat, fromLng), new google.maps.LatLng(toLat, toLng));
   }
@@ -159,13 +223,12 @@ function deleteStation (station)
 }
 }
 
-
 function initMap() 
       {//create a map
 
        map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
-        center: {lat: 49, lng: 24},
+        zoom: 17,
+        center: {lat: 49.83476128325918, lng: 24.01436448097229},
         mapTypeId: 'terrain',
         scaleControl: true,
         streetViewControl: false,
@@ -209,21 +272,20 @@ function ActiveMapButton (button) {
   
   var mapButtons=[clearMap,addMS,addBS,deleteBS];
   if(button.style.backgroundColor=='green'){
-    button.style.backgroundColor='white';
+    button.style.backgroundColor='rgba(25,25,25,0.3)';
   }
   else{
     can_place_station = can_place_MSstation = can_delete_station=false;
     for(let i=0;i<mapButtons.length;i++){
-      mapButtons[i].style.backgroundColor='white';
+      mapButtons[i].style.backgroundColor='rgba(25,25,25,0.3)';
     }
     button.style.backgroundColor='green';
-
   }
   switch (button.id) {
     case 'Clear_Btn':
     clear_map();
     Station_id=0;
-    button.style.backgroundColor = 'white';
+    button.style.backgroundColor = 'rgba(25,25,25,0.3)';
     break;
     case 'Add_MS_Btn':
     can_place_MSstation=!can_place_MSstation;
@@ -241,7 +303,11 @@ function Add_BS_LTE_Control(controlDiv) {
   // Set CSS for the control border.
   var controlUI = document.createElement('button');
   controlUI.id="Add_BS_Btn";
-  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.backgroundColor = 'rgba(25,25,25,.2)'
+  controlUI.style.backgroundImage = 'url(http://cdn.onlinewebfonts.com/svg/img_502736.png)';
+  controlUI.style.backgroundSize = 'cover';
+  controlUI.style.height = '60px';
+  controlUI.style.width = '60px';
   controlUI.style.display = 'block';
   controlUI.style.border = '2px solid #fff';
   controlUI.style.borderRadius = '5px';
@@ -258,7 +324,7 @@ function Add_BS_LTE_Control(controlDiv) {
   controlText.style.fontSize = '16px';
   controlText.style.paddingLeft = '5px';
   controlText.style.paddingRight = '5px';
-  controlText.innerHTML = 'Add LTE BASE';
+  controlText.innerHTML = '';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners to button
@@ -270,6 +336,10 @@ function Add_BS_LTE_Control(controlDiv) {
 function Add_MS_Control(controlDiv) {
   // Set CSS for the control border.
   var controlUI = document.createElement('button');
+  controlUI.style.backgroundImage = 'url(http://icons.iconarchive.com/icons/designbolts/free-multimedia/1024/iPhone-icon.png)'
+  controlUI.style.backgroundSize = 'cover';
+  controlUI.style.backgroundColor = 'rgba(25,25,25,.2)'
+  controlUI.style.width = controlUI.style.height= '60px';
   controlUI.id="Add_MS_Btn";
   controlUI.style.backgroundColor = '#fff';
   controlUI.style.border = '2px solid #fff';
@@ -287,7 +357,7 @@ function Add_MS_Control(controlDiv) {
   controlText.style.fontSize = '16px';
   controlText.style.paddingLeft = '5px';
   controlText.style.paddingRight = '5px';
-  controlText.innerHTML = 'Add MS BASE';
+  controlText.innerHTML = '';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners to button
@@ -299,13 +369,16 @@ function DeleteBS_Control(controlDiv) {
   // Set CSS for the control border.
   var controlUI = document.createElement('button');
   controlUI.id="DeleteBS_Btn";
-  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.backgroundImage = 'url(https://cdn1.iconfinder.com/data/icons/toolbar-signs/512/erase-512.png)';
+  controlUI.style.backgroundSize = 'cover';
+  controlUI.style.backgroundColor = 'rgba(25,25,25,.2)'
+  controlUI.style.width = controlUI.style.height= '60px';
   controlUI.style.border = '2px solid #fff';
   controlUI.style.borderRadius = '5px';
   controlUI.style.cursor = 'pointer';
   controlUI.style.marginBottom = '22px';
   controlUI.style.textAlign = 'center';
-  controlUI.title = 'Delete Base stations';
+  controlUI.title = 'Delete selected station';
   controlDiv.appendChild(controlUI);
 
   // Set CSS for the control interior.
@@ -315,7 +388,7 @@ function DeleteBS_Control(controlDiv) {
   controlText.style.fontSize = '16px';
   controlText.style.paddingLeft = '5px';
   controlText.style.paddingRight = '5px';
-  controlText.innerHTML = 'Delete Station';
+  controlText.innerHTML = '';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners to button
@@ -328,13 +401,17 @@ function ClearMap_Control(controlDiv) {
   // Set CSS for the control border.
   var controlUI = document.createElement('button');
   controlUI.id="Clear_Btn";
-  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.backgroundColor = 'rgba(12,12,12,.3)';
+  controlUI.style.backgroundImage = 'url(http://www.free-icons-download.net/images/clear-icon-37966.png)'
+  
+  controlUI.style.height=controlUI.style.width =  '60px';
+  controlUI.style.backgroundSize = 'contain';
   controlUI.style.border = '2px solid #fff';
   controlUI.style.borderRadius = '5px';
   controlUI.style.cursor = 'pointer';
   controlUI.style.marginBottom = '22px';
   controlUI.style.textAlign = 'center';
-  controlUI.title = 'Delete Base and mobile stations';
+  controlUI.title = 'Clear Map';
   controlDiv.appendChild(controlUI);
 
   // Set CSS for the control interior.
@@ -344,7 +421,7 @@ function ClearMap_Control(controlDiv) {
   controlText.style.fontSize = '16px';
   controlText.style.paddingLeft = '5px';
   controlText.style.paddingRight = '5px';
-  controlText.innerHTML = 'Clear Map';
+  controlText.innerHTML = '';
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners to button
