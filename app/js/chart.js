@@ -13,7 +13,7 @@
     };  
     var modulation=PSK.PSK_4;
     var Code="";
-    var SNR_value=1;
+    var SNR_value=100;
 
     function setModulation()
     {
@@ -180,7 +180,7 @@
       function drawChart() {
 
         var data = createArray(modulation,enteredCode);
-        console.log(data);
+        //console.log(data);
         var options = {
           title: '',
           hAxis: {title: 'I', minValue: -2, maxValue: 2},
@@ -195,23 +195,130 @@
 
 
       function makeErrors(value){
-        //max = 20 min = 7
+        //max = 200 min = 7
         var size;
+        value = +value;
+  
+        if(modulation==PSK.PSK_4){
+         switch (value) {
+           case 1:
+             size = 200;
+             break;
+           case 2:
+             size = 195;
+             break;
+           case 3:
+             size = 185;
+             break;
+           case 4:
+             size = 175;
+             break;
+           case 5:
+             size = 170;
+             break;
+           case 6:
+             size = 160;
+             break;
+           case 7:
+             size = 150;
+             break;
+           case 8:
+             size = 140;
+             break;
+           case 9:
+             size = 130;
+             break;
+           case 10:
+             size = 120;
+             break;
+           case 11:
+             size = 110;
+             break;
+           case 12:
+             size = 100;
+             break;
+           case 13:
+             size = 90;
+             break;
+           case 14:
+             size = 75;
+             break;
+           case 15:
+             size = 60;
+             break;
+           case 16:
+             size = 45;
+             break;
+           case 17:
+             size = 30;
+             break;
+           case 18:
+             size = 20;
+             break;
+           case 19:
+             size = 15;
+             break;
+           case 20:
+             size = 12;
+             break;
+           case 21:
+             size = 12;
+             break;
+           case 22:
+             size = 12;
+             break;
+           case 23:
+             size = 11;
+             break;
+           case 24:
+             size = 11;
+             break;
+           case 25:
+             size = 11;
+             break;
+           case 26:
+             size = 10;
+             break;
+           case 27:
+             size = 9;
+             break;
+           case 28:
+             size = 9;
+             break;
+           case 29:
+             size = 8;
+             break;
+           case 30:
+             size = 8;
+             break;
+           default:
+             size = 7;
+             break;
+         }
+                console.log(value)
+               console.log(size)
+       }
+       // if(modulation==PSK.PSK_16){
+          
+        //}
 
 
+
+        //console.log(SNR_value);
         return size;
       }
 
       function draw_chart2()
       {
         var data = createArray(modulation,enteredCode);
+        var errorValue = makeErrors(SNR_value);
 
         var options = {
           title: '',
           hAxis: {title: 'I', minValue: -2, maxValue: 2},
           vAxis: {title: 'Q', minValue: -2, maxValue: 2},
           legend: 'none',
-          pointSize: 7
+          pointSize: errorValue
         };
 
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_second'));
