@@ -30,7 +30,7 @@ details {
     details input + label {
       display: inline-block; }
   details #entered_code {
-    width: 250px; }
+    width: 200px; }
 
 h2 {
   text-align: center;
@@ -38,11 +38,12 @@ h2 {
   margin: 0; }
 
 #mForm {
-  text-align: left;
-  width: 200px;
-  height: 600px; }
+  -webkit-flex-grow: 2;
+  flex-grow: 2;
+  border: 1px solid red;
+  text-align: center; }
   #mForm input[type=button] {
-    width: 100%;
+    width: 70%;
     border-radius: 20px;
     box-shadow: 3 22 12px rgba(0, 0, 0, 0.5);
     background-color: darkblue;
@@ -63,18 +64,30 @@ h2 {
   font-size: 25px; }
 
 .charts {
-  width: 45%;
+  width: 400px;
+  height: 250px;
   display: inline-block;
   margin: 0 2.5%; }
 
-.charts_cont {
-  width: 900px;
+#SNR_label {
   position: absolute;
-  top: 0;
-  right: 20px;
-  margin-top: 100px;
-  float: left;
+  top: 66px; }
+  #SNR_label input {
+    border-radius: 5px;
+    margin: 10px; }
+
+#modulation_section {
   display: flex;
+  -webkit-justify-content: space-around;
+  justify-content: space-around; }
+
+.charts_cont {
+  padding-top: 50px;
+  -webkit-flex-grow: 3;
+  flex-grow: 3;
+  border: 1px solid red;
+  display: flex;
+  -webkit-justify-content: space-around;
   justify-content: space-around; }
 
 /*# sourceMappingURL=modulationWindow.css.map */

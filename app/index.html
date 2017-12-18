@@ -21,6 +21,7 @@
 	</div>
 	<details open="open">
 		<summary>Modulation Process.</summary>
+		<div id="modulation_section">
 		<div id="mForm">
 			<label for="entered_code" >Enter your code</label><br>
 			<input type="number" id="entered_code" placeholder="1010101010" value="101010010">
@@ -31,22 +32,24 @@
 				<input type="radio" name="modulation" value="16" onchange="setModulation()" id="radio2" class="radio"> 
 				<label for="radio2">16-QAM</label>
 			</form>
-			<label for="">SNR:
-				<span id="SNR_Span"></span><br>
-				<input type="range" min="1" max="100" onchange="SNRChange(this)" value="100" >
-			</label>
+			
 			<input type="button" value="Send" onclick="Update()">
 		</div>
 		
 		<div class="charts_cont">
+			<label for="" id="SNR_label">SNR:
+				<span id="SNR_Span"></span><br>
+				<input type="range" min="1" max="100" onchange="SNRChange(this)" value="100" >
+			</label>
 				<div>
 					<h2>Without errors</h2>
-					<div id="chart_div" class="charts" style="width: 450px; height: 250px;"></div>
+					<div id="chart_div" class="charts" ></div>
 				</div>
 				<div>
 					<h2>With errors</h2>
-					<div id="chart_div_second" class="charts" style="width: 450px; height: 250px;"></div>
+					<div id="chart_div_second" class="charts" ></div>
 				</div>
+		</div>
 		</div>
 		
 		

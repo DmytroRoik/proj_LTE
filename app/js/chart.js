@@ -460,6 +460,7 @@
 
       //apply after loading page
       window.onload = () => {
+       document.getElementById('SNR_Span').innerText = 100+'dB';
        Update();
       }
 
