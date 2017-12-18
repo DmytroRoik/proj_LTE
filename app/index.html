@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="css/modulationWindow.css">
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTPpQ08GB1OGiE1iMkY_e7wqBAHeVEock&libraries=visualization&callback=initMap" async></script>
+
 	
 </head>
 <body>
@@ -18,7 +19,7 @@
 		<summary>Modulation Process.</summary>
 		<div id="mForm">
 			<label for="entered_code" >Enter your code</label><br>
-			<input type="number" id="entered_code" placeholder="1010101010">
+			<input type="number" id="entered_code" placeholder="1010101010" value="101010010">
 			<form action="">
 				<label>Тип модуляції:</label><br>
 				<input type="radio" name="modulation" value="4" class="radio" id="radio1" onchange="setModulation()"  checked="checked">
@@ -30,7 +31,7 @@
 		</div>
 		<label for="">SNR:
 			<span id="SNR_Span"></span><br>
-			<input type="range" min="1" max="100" onchange="SNRChange(this)">
+			<input type="range" min="1" max="100" onchange="SNRChange(this)" >
 		</label>
 
 		<div id="chart_div" class="charts" style="width: 900px; height: 500px;"></div>

@@ -49,15 +49,19 @@
           temp_code+='0';
         }
       }
-      alert(temp_code);
+      //alert(temp_code);
       return temp_code;
     }
+
+
+
     function SNRChange (e) {
       SNR_value=e.value;
       document.getElementById('SNR_Span').innerText=SNR_value+'dB';
    
  //     this.previousSibling.innerText=SNR_value;
       //#TODO: 
+      Update();
     }
 
     function createArray(type_PSK,code)
@@ -142,6 +146,7 @@
       }
       return data;
     }
+    /*
 
     function Array_with_error (type_PSK,code,SNR) {
       var data = createArray(type_PSK,code);
@@ -167,6 +172,10 @@
           }
         }
       }
+      */
+
+
+
 
       function drawChart() {
 
@@ -184,15 +193,25 @@
         chart.draw(data, options);
       }
 
+
+      function makeErrors(value){
+        //max = 20 min = 7
+        var size;
+
+
+        return size;
+      }
+
       function draw_chart2()
       {
-        var data = Array_with_error(modulation,enteredCode);
+        var data = createArray(modulation,enteredCode);
 
         var options = {
           title: '',
           hAxis: {title: 'I', minValue: -2, maxValue: 2},
           vAxis: {title: 'Q', minValue: -2, maxValue: 2},
-          legend: 'none'
+          legend: 'none',
+          pointSize: 7
         };
 
         var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_second'));
@@ -206,3 +225,9 @@
         drawChart();
         draw_chart2();
       }
+
+      //apply after loading page
+      window.onload = () => {
+       Update();
+      }
+
