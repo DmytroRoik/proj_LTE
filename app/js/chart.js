@@ -23,6 +23,10 @@
       else if(radioBut[1].checked)
         modulation=PSK.PSK_16;
     }
+    $('.radio').on("change click", ()=>{
+      Update();
+    });
+
     function setCode(){
       var textArea=document.getElementById("entered_code");
       enteredCode=try_validateCode(textArea.value);
@@ -295,16 +299,136 @@
              size = 7;
              break;
          }
-                console.log(value)
-               console.log(size)
-       }
-       // if(modulation==PSK.PSK_16){
-          
-        //}
 
+      }
+      if(modulation==PSK.PSK_16){
+          switch (value) {
+           case 1:
+             size = 200;
+             break;
+           case 2:
+             size = 194;
+             break;
+           case 3:
+             size = 188;
+             break;
+           case 4:
+             size = 182;
+             break;
+           case 5:
+             size = 176;
+             break;
+           case 6:
+             size = 170;
+             break;
+           case 7:
+             size = 164;
+             break;
+           case 8:
+             size = 158;
+             break;
+           case 9:
+             size = 152;
+             break;
+           case 10:
+             size = 146;
+             break;
+           case 11:
+             size = 140;
+             break;
+           case 12:
+             size = 134;
+             break;
+           case 13:
+             size = 128;
+             break;
+           case 14:
+             size = 122;
+             break;
+           case 15:
+             size = 116;
+             break;
+           case 16:
+             size = 110;
+             break;
+           case 17:
+             size = 104;
+             break;
+           case 18:
+             size = 98;
+             break;
+           case 19:
+             size = 92;
+             break;
+           case 20:
+             size = 96;
+             break;
+           case 21:
+             size = 90;
+             break;
+           case 22:
+             size = 80;
+             break;
+           case 23:
+             size = 70;
+             break;
+           case 24:
+             size = 62;
+             break;
+           case 25:
+             size = 54;
+             break;
+           case 26:
+             size = 40;
+             break;
+           case 27:
+             size = 28;
+             break;
+           case 28:
+             size = 20;
+             break;
+           case 29:
+             size = 15;
+             break;
+           case 30:
+             size = 13;
+             break;
+            case 31:
+             size = 13;
+             break;
+            case 32:
+             size = 12;
+             break;
+            case 33:
+             size = 12;
+             break;
+           case 34:
+             size = 11;
+             break;
+           case 35:
+             size = 10;
+             break;
+           case 36:
+             size = 10;
+             break;
+           case 37:
+             size = 9;
+             break;
+           case 38:
+             size = 9;
+             break;
+           case 39:
+             size = 8;
+             break;
+           case 40:
+             size = 8;
+             break;
+           default:
+             size = 7;
+             break;
+         }
+      }
 
-
-        //console.log(SNR_value);
         return size;
       }
 
