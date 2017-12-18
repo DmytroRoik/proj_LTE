@@ -6,8 +6,12 @@ input[type=number]::-webkit-outer-spin-button {
 }
 details {
 	background-color: #EFEEF1;
-	margin: 10px 0;
+	margin: 10px 10px;
 	border-radius: 15px 15px 0 0;
+	position: relative;
+	//height: 1000px;
+	//display: flex;
+	//justify-content: space-around;
 	summary{
 		background-color: rgba(209,95,0,.5);
 		border-radius: inherit;
@@ -38,12 +42,18 @@ details {
 	}
 
 }
- #mForm{
-	margin: 100 0;
+h2{
 	text-align: center;
-	margin: 10px 0 40px 0;
-	input:last-child{
-		width:200px;
+	padding: 0;
+	margin: 0;
+}
+ #mForm{
+	text-align: left;
+	width: 200px;
+	height: 600px;
+	//margin: 10px 0 40px 0;
+	input[type=button]{
+		width:100%;
 		border-radius:20px;
 		box-shadow: 3 22 12px rgba(0,0,0,0.5);
 		background-color: darkblue;
@@ -56,6 +66,9 @@ details {
 			transform: scale(1.1);
 			color:white;
 			border:2px solid yellow;
+		}
+		input[type=range]{
+			width: 100%;
 		}
 	}
 }
@@ -72,4 +85,20 @@ details {
 }
 #chart_div_second{
 
+}
+
+.charts_cont{
+	//height: 550px;
+	width: 900px;
+	position: absolute;
+	top:0;
+	right:20px;
+	margin-top: 100px; 
+	float: left;
+	display: flex;
+	justify-content: space-around;
+	
+	div{
+		//display: ;
+	}
 }

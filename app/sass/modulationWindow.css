@@ -1,0 +1,80 @@
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
+
+details {
+  background-color: #EFEEF1;
+  margin: 10px 10px;
+  border-radius: 15px 15px 0 0;
+  position: relative; }
+  details summary {
+    background-color: rgba(209, 95, 0, 0.5);
+    border-radius: inherit;
+    font-size: 25px;
+    padding: 15px;
+    font-weight: bold;
+    margin-bottom: 15px; }
+  details label {
+    margin: 30px;
+    font-size: 24px;
+    text-align: center;
+    margin: 15px; }
+  details input {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5); }
+    details input + label {
+      display: inline-block; }
+  details #entered_code {
+    width: 250px; }
+
+h2 {
+  text-align: center;
+  padding: 0;
+  margin: 0; }
+
+#mForm {
+  text-align: left;
+  width: 200px;
+  height: 600px; }
+  #mForm input[type=button] {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 3 22 12px rgba(0, 0, 0, 0.5);
+    background-color: darkblue;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: all 1s; }
+    #mForm input[type=button]:hover {
+      background-color: #B81034;
+      transform: scale(1.1);
+      color: white;
+      border: 2px solid yellow; }
+    #mForm input[type=button] input[type=range] {
+      width: 100%; }
+
+.radio:checked + label {
+  color: red;
+  font-size: 25px; }
+
+.charts {
+  width: 45%;
+  display: inline-block;
+  margin: 0 2.5%; }
+
+.charts_cont {
+  width: 900px;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  margin-top: 100px;
+  float: left;
+  display: flex;
+  justify-content: space-around; }
+
+/*# sourceMappingURL=modulationWindow.css.map */
