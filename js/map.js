@@ -35,7 +35,7 @@ function BaseStation(id,position,radius,title){
   });
   
   this.icon= {
-       url: "../img/BaseStation_icon.png", // url
+       url: "./img/BaseStation_icon.png", // url
        scaledSize: new google.maps.Size(30, 30), // scaled size
        origin: new google.maps.Point(0,0), // origin
        anchor: new google.maps.Point(15, 30) // anchor
@@ -90,7 +90,7 @@ function BaseStation(id,position,radius,title){
     //   downlink: 4/7*2.38=
     // }
     this.icon= {
-       url: "../img/mobile_station.png", // url
+       url: "./img/mobile_station.png", // url
        scaledSize: new google.maps.Size(30, 30), // scaled size
        origin: new google.maps.Point(0,0), // origin
        anchor: new google.maps.Point(15, 30) // anchor
