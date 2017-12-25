@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LTE_Project</title>
+	
+	<link rel="stylesheet" href="sass/modulationWindow.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTPpQ08GB1OGiE1iMkY_e7wqBAHeVEock&libraries=visualization&callback=initMap" async></script>
+
+	
+</head>
+<body>
+	<h3>Map</h3>
+	<div id="map" style="height: 700px;
+	width: 100%; margin:0 auto;">
+	</div>
+	<details open="open">
+		<summary>Modulation Process.</summary>
+		<div id="modulation_section">
+		<div id="mForm">
+			<label for="entered_code" >Enter your code</label><br>
+			<input type="number" id="entered_code" placeholder="1010101010" value="101010010">
+			<form action="">
+				<label>Тип модуляції:</label><br>
+				<input type="radio" name="modulation" value="4" class="radio" id="radio1" onchange="setModulation()"  checked="checked">
+				<label for="radio1">QPSK</label> <br>
+				<input type="radio" name="modulation" value="16" onchange="setModulation()" id="radio2" class="radio"> 
+				<label for="radio2">16-QAM</label>
+			</form>
+			
+			<input type="button" value="Send" onclick="Update()">
+		</div>
+		
+		<div class="charts_cont">
+			<label for="" id="SNR_label">SNR:
+				<span id="SNR_Span"></span><br>
+				<input type="range" min="1" max="100" onchange="SNRChange(this)" value="100" >
+			</label>
+				<div>
+					<h2>Without errors</h2>
+					<div id="chart_div" class="charts" ></div>
+				</div>
+				<div>
+					<h2>With errors</h2>
+					<div id="chart_div_second" class="charts" ></div>
+				</div>
+		</div>
+		</div>
+		
+		
+	</details>
+	<script src="js/chart.js" defer></script>
+  	<script src="js/map.js" defer></script>
+</body>
+</html>
