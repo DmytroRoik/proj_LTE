@@ -53,7 +53,7 @@
           temp_code+='0';
         }
       }
-      //alert(temp_code);
+      
       return temp_code;
     }
 
@@ -62,11 +62,8 @@
     function SNRChange (e) {
       SNR_value=e.value;
       document.getElementById('SNR_Span').innerText=SNR_value+'dB';
-   
- //     this.previousSibling.innerText=SNR_value;
-      //#TODO: 
-      Update();
-    }
+      Update();    
+}
     
 
     function createArray(type_PSK,code)
@@ -463,4 +460,3 @@
        document.getElementById('SNR_Span').innerText = 100+'dB';
        Update();
       }
-
